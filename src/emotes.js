@@ -82,30 +82,32 @@ const loadEmotes = (context, args) => {
     }
 
     // Load Twitch channel badges
-    pending.push(
-        fetch(`https://badges.twitch.tv/v1/badges/${context === '_global' ? 'global' : `channels/${loadedAssets[context].uid}`}/display`)
-            .then(response => response.json())
-            .then(body => {
-                try {
-                    for (const set in body.badge_sets) {
-                        for (const version in body.badge_sets[set].versions) {
-                            loadedAssets[context].badges[set + "/" + version] = {
-                                name: set + "/" + version,
-                                url: body.badge_sets[set].versions[version].image_url_4x,
-                            };
+    if (!loadedAssets[context].loaded.badges) {
+        pending.push(
+            fetch(`https://badges.twitch.tv/v1/badges/${context === '_global' ? 'global' : `channels/${loadedAssets[context].uid}`}/display`)
+                .then(response => response.json())
+                .then(body => {
+                    try {
+                        for (const set in body.badge_sets) {
+                            for (const version in body.badge_sets[set].versions) {
+                                loadedAssets[context].badges[set + "/" + version] = {
+                                    name: body.badge_sets[set].versions[version].title,
+                                    url: body.badge_sets[set].versions[version].image_url_4x,
+                                };
+                            }
                         }
-                    }
 
-                    loadedAssets[context].loaded.badges = true;
-                } catch (error) {
-                    console.log(error);
-                    exports.events.emit('error', {
-                        channel: context,
-                        error: "Failed to load Twitch badges for " + context
-                    });
-                }
-            }),
-    );
+                        loadedAssets[context].loaded.badges = true;
+                    } catch (error) {
+                        console.log(error);
+                        exports.events.emit('error', {
+                            channel: context,
+                            error: "Failed to load Twitch badges for " + context
+                        });
+                    }
+                }),
+        );
+    }
 
     return pending;
 };
@@ -153,20 +155,21 @@ module.exports.handleEmotes = (message, tags, channel) => {
 
     // Get any emotes from twitch
     for (const emote in (tags.emotes || {})) {
-        if (loadedAssets[channel].emotes.find(e => e.name === emote)) continue;
+        if (loadedAssets[channel].emotes.find(e => e.id === emote)) continue;
 
         const pos = tags.emotes[emote][0].split('-').map(Number);
         loadedAssets[channel].emotes.push({
             name: message.substring(pos[0], pos[1] + 1),
             url: `https://static-cdn.jtvnw.net/emoticons/v2/${emote}/default/dark/3.0`,
             type: 'twitch',
+            id: emote
         });
     }
 
     // Get which emotes are used
     const found = [];
     for (const emote of loadedAssets[channel].emotes.concat(loadedAssets._global.emotes)) {
-        const regex = new RegExp(`\\b${emote.name}\\b`, 'g');
+        const regex = new RegExp(`\\b${emote.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'g');
         const matches = [...message.matchAll(regex)];
         for (const match of matches) {
             found.push({

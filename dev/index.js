@@ -1,7 +1,15 @@
 const Chat = require('../src');
 
 document.addEventListener('DOMContentLoaded', () => {
+    document.body.style.height = '100vh';
+    document.body.style.margin = '0';
+    document.body.style.background = '#444';
+
     const elm = document.createElement('div');
+    elm.style.height = '100%';
+    elm.style.padding = '4em';
+    elm.style.boxSizing = 'border-box';
     document.body.appendChild(elm);
-    new Chat(elm, { channels: [ '#MattIPv4' ] });
+
+    new Chat(elm, { channels: [ '#maya' ] });
 });
