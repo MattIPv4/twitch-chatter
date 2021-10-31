@@ -2,3 +2,4 @@
 src/
 dev/
 webpack.config.js
+.nvmrc

@@ -12,7 +12,7 @@ module.exports = env => ({
         path: path.resolve(__dirname, 'dist'),
         clean: true,
         // Ensure the exports are preserved for production
-        library: env.production ? { name: 'twitchChat', type: 'umd' } : undefined,
+        library: env.production ? { name: 'twitchChatter', type: 'umd' } : undefined,
     },
     // Load the html plugin when in development
     plugins: [
