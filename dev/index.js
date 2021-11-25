@@ -3,6 +3,7 @@ const Chat = require('../src');
 document.addEventListener('DOMContentLoaded', () => {
     document.body.style.height = '100vh';
     document.body.style.margin = '0';
+    document.body.style.fontSize = '22px';
     document.body.style.background = '#444';
 
     const elm = document.createElement('div');

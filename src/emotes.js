@@ -43,11 +43,7 @@ const loadEmotes = (context, args) => {
 
                         loadedAssets[context].loaded.ffz = true;
                     } catch (error) {
-                        console.log(error);
-                        exports.events.emit('error', {
-                            channel: context,
-                            error: "Failed to load FFZ emotes for " + context
-                        });
+                        console.error(`Failed to load FFZ emotes for ${context}`, error);
                     }
                 }),
         );
@@ -71,11 +67,7 @@ const loadEmotes = (context, args) => {
 
                         loadedAssets[context].loaded.bttv = true;
                     } catch (error) {
-                        console.log(error);
-                        exports.events.emit('error', {
-                            channel: context,
-                            error: "Failed to load BetterTTV emotes for " + context
-                        });
+                        console.error(`Failed to load BTTV emotes for ${context}`, error);
                     }
                 }),
         );
@@ -99,11 +91,7 @@ const loadEmotes = (context, args) => {
 
                         loadedAssets[context].loaded.badges = true;
                     } catch (error) {
-                        console.log(error);
-                        exports.events.emit('error', {
-                            channel: context,
-                            error: "Failed to load Twitch badges for " + context
-                        });
+                        console.error(`Failed to load Twitch badges for ${context}`, error);
                     }
                 }),
         );

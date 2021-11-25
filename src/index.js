@@ -30,11 +30,11 @@ class Chat {
         // Create the client
         this.client = new tmi.Client({
             options: {
-                debug: false
+                debug: false,
             },
             connection: {
                 reconnect: true,
-                secure: true
+                secure: true,
             },
             channels,
         });
